@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Icon } from '../Icon';
 import { Todo } from '../../type';
 import { Input } from '../Input';
 import { colors, fontSize, spacing } from '../../theme';
@@ -26,15 +26,21 @@ const TodoItem = ({
     onEditTodo(editedText);
   };
 
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+  };
+
   return (
     <View style={styles.container}>
       {isEditing ? (
+        // edit todo
         <Input
           value={editedText}
           onChangeText={setEditedText}
           placeholder="Edit todo"
         />
       ) : (
+        // complete todo
         <TouchableOpacity
           style={styles.completeButton}
           onPress={onCompleteTodo}
@@ -43,9 +49,7 @@ const TodoItem = ({
             <Icon
               name={todo.completed ? 'check-box' : 'check-box-outline-blank'}
               size={24}
-              color={
-                todo.completed ? colors.text.secondary : colors.text.primary
-              }
+              color={todo.completed ? colors.primary : colors.text.secondary}
             />
           </View>
           <Text
@@ -66,9 +70,17 @@ const TodoItem = ({
             color={colors.text.secondary}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={onDeleteTodo}>
-          <Icon name="delete" size={24} color={colors.error} />
-        </TouchableOpacity>
+        {isEditing ? (
+          // cancel edit
+          <TouchableOpacity onPress={handleCancelEdit}>
+            <Icon name="close" size={24} color={colors.error} />
+          </TouchableOpacity>
+        ) : (
+          // delete todo
+          <TouchableOpacity onPress={onDeleteTodo}>
+            <Icon name="delete" size={24} color={colors.error} />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
